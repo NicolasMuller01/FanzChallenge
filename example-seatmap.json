@@ -1,0 +1,77 @@
+{
+  "mapName": "Example Stadium Section",
+  "seatMap": {
+    "id": "example-1",
+    "name": "Example Stadium Section",
+    "rows": [
+      {
+        "id": "row-1",
+        "label": "Row A",
+        "seats": [
+          {
+            "id": "seat-1",
+            "label": "A1",
+            "rowId": "row-1",
+            "position": {
+              "x": 10,
+              "y": 30
+            }
+          },
+          {
+            "id": "seat-2",
+            "label": "A2",
+            "rowId": "row-1",
+            "position": {
+              "x": 50,
+              "y": 30
+            }
+          },
+          {
+            "id": "seat-3",
+            "label": "A3",
+            "rowId": "row-1",
+            "position": {
+              "x": 90,
+              "y": 30
+            }
+          }
+        ],
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      },
+      {
+        "id": "row-2",
+        "label": "Row B",
+        "seats": [
+          {
+            "id": "seat-4",
+            "label": "B1",
+            "rowId": "row-2",
+            "position": {
+              "x": 10,
+              "y": 30
+            }
+          },
+          {
+            "id": "seat-5",
+            "label": "B2",
+            "rowId": "row-2",
+            "position": {
+              "x": 50,
+              "y": 30
+            }
+          }
+        ],
+        "position": {
+          "x": 50,
+          "y": 170
+        }
+      }
+    ],
+    "createdAt": "2024-10-04T00:00:00.000Z",
+    "updatedAt": "2024-10-04T00:00:00.000Z"
+  }
+}
+
