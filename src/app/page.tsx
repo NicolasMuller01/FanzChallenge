@@ -41,7 +41,6 @@ export default function HomePage() {
     moveObject,
     deleteObject,
     deleteSelectedObjects,
-    validateAndCleanObjects,
     moveMultipleRows,
     moveMultipleObjects,
     selectMultipleRows,
@@ -52,14 +51,7 @@ export default function HomePage() {
   const {
     toolState,
     selectTool,
-    startDrawing,
-    updateDrawing,
-    finishDrawing,
     getCursorStyle,
-    canDraw,
-    canMove,
-    canAreaSelect,
-    canDelete,
   } = useTools();
 
   const [showNewMapModal, setShowNewMapModal] = useState(false);

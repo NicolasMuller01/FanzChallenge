@@ -566,12 +566,6 @@ export const useSeatMap = () => {
     return result;
   }, []);
 
-  const setEditing = useCallback((isEditing: boolean) => {
-    setState(prev => ({
-      ...prev,
-      isEditing,
-    }));
-  }, []);
 
   const loadTemplate = useCallback((templateId: string) => {
     const template = getTemplateById(templateId);
@@ -709,39 +703,6 @@ export const useSeatMap = () => {
     toast.success(`${state.selectedObjects.length} objetos eliminados exitosamente!`);
   }, [state.currentMap, state.selectedObjects]);
 
-  const validateAndCleanObjects = useCallback(() => {
-    if (!state.currentMap) return;
-
-    const canvasWidth = 800; // Approximate canvas width
-    const canvasHeight = 600; // Approximate canvas height
-    const margin = 20;
-
-    const validObjects = state.currentMap.objects.filter(obj => {
-      const { x, y } = obj.position;
-      const { width, height } = obj.size;
-      
-      return x >= margin && 
-             y >= margin && 
-             x + width <= canvasWidth - margin && 
-             y + height <= canvasHeight - margin;
-    });
-
-    if (validObjects.length !== state.currentMap.objects.length) {
-      const updatedMap = {
-        ...state.currentMap,
-        objects: validObjects,
-        updatedAt: new Date().toISOString(),
-      };
-
-      setState(prev => ({
-        ...prev,
-        currentMap: updatedMap,
-        selectedObjects: prev.selectedObjects.filter(id => 
-          validObjects.some(obj => obj.id === id)
-        ),
-      }));
-    }
-  }, [state.currentMap]);
 
   return {
     state,
@@ -765,14 +726,12 @@ export const useSeatMap = () => {
     clearSelection,
     exportMap,
     importMap,
-    setEditing,
     loadTemplate,
     addObject,
     selectObject,
     moveObject,
     deleteObject,
     deleteSelectedObjects,
-    validateAndCleanObjects,
     moveMultipleRows,
     moveMultipleObjects,
     clearInitialPositions,
