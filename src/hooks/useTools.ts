@@ -15,7 +15,6 @@ export const useTools = () => {
     currentPosition: null,
   });
 
-  console.log("toolState", toolState);
 
   const selectTool = useCallback((tool: string) => {
     setToolState(prev => ({

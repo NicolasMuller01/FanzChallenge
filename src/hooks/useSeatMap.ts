@@ -150,6 +150,31 @@ export const useSeatMap = () => {
     toast.success('Fila eliminada exitosamente!');
   }, [state.currentMap]);
 
+  const deleteMultipleRows = useCallback((rowIds: string[]) => {
+    if (!state.currentMap || rowIds.length === 0) return;
+
+    // Create a set for faster lookup
+    const rowIdsSet = new Set(rowIds);
+    
+    // Filter out the selected rows
+    const updatedRows = state.currentMap.rows.filter(row => !rowIdsSet.has(row.id));
+
+    const updatedMap = {
+      ...state.currentMap,
+      rows: updatedRows,
+      updatedAt: new Date().toISOString(),
+    };
+
+    setState(prev => ({
+      ...prev,
+      currentMap: updatedMap,
+      selectedRows: [],
+    }));
+
+    // Show toast
+    toast.success(`${rowIds.length} filas eliminadas exitosamente!`);
+  }, [state.currentMap]);
+
   const deleteSeat = useCallback((rowId: string, seatId: string) => {
     if (!state.currentMap) return;
 
@@ -171,6 +196,34 @@ export const useSeatMap = () => {
 
     // Show toast
     toast.success('Asiento eliminado exitosamente!');
+  }, [state.currentMap]);
+
+  const deleteMultipleSeats = useCallback((seatIds: string[]) => {
+    if (!state.currentMap || seatIds.length === 0) return;
+
+    // Create a set for faster lookup
+    const seatIdsSet = new Set(seatIds);
+    
+    // Update all rows to remove the selected seats
+    const updatedRows = state.currentMap.rows.map(row => ({
+      ...row,
+      seats: row.seats.filter(seat => !seatIdsSet.has(seat.id))
+    }));
+
+    const updatedMap = {
+      ...state.currentMap,
+      rows: updatedRows,
+      updatedAt: new Date().toISOString(),
+    };
+
+    setState(prev => ({
+      ...prev,
+      currentMap: updatedMap,
+      selectedSeats: [],
+    }));
+
+    // Show toast
+    toast.success(`${seatIds.length} asientos eliminados exitosamente!`);
   }, [state.currentMap]);
 
   const updateSeat = useCallback((rowId: string, seatId: string, newLabel: string) => {
@@ -255,7 +308,6 @@ export const useSeatMap = () => {
   }, [state.currentMap]);
 
   const selectMultipleObjects = useCallback((objectIds: string[]) => {
-    console.log("selectMultipleObjects called with:", objectIds);
     setState(prev => ({
       ...prev,
       selectedObjects: objectIds,
@@ -265,7 +317,6 @@ export const useSeatMap = () => {
   }, []);
 
   const selectMultipleRows = useCallback((rowIds: string[]) => {
-    console.log("selectMultipleRows called with:", rowIds);
     setState(prev => ({
       ...prev,
       selectedRows: rowIds,
@@ -277,7 +328,7 @@ export const useSeatMap = () => {
   const moveMultipleRows = useCallback((rowIds: string[], deltaX: number, deltaY: number) => {
     if (!state.currentMap) return;
 
-    console.log("moveMultipleRows called with:", rowIds, "delta:", deltaX, deltaY);
+   
 
     // Store initial positions if not already stored
     if (!state.initialRowPositions) {
@@ -299,7 +350,7 @@ export const useSeatMap = () => {
         const initialPos = state.initialRowPositions[row.id];
         const newX = Math.max(0, initialPos.x + deltaX);
         const newY = Math.max(0, initialPos.y + deltaY);
-        console.log(`Moving row ${row.id} from (${row.position.x}, ${row.position.y}) to (${newX}, ${newY})`);
+     
         return {
           ...row,
           position: {
@@ -326,7 +377,6 @@ export const useSeatMap = () => {
   const moveMultipleObjects = useCallback((objectIds: string[], deltaX: number, deltaY: number) => {
     if (!state.currentMap) return;
 
-    console.log("moveMultipleObjects called with:", objectIds, "delta:", deltaX, deltaY);
 
     // Store initial positions if not already stored
     if (!state.initialObjectPositions) {
@@ -348,7 +398,7 @@ export const useSeatMap = () => {
         const initialPos = state.initialObjectPositions[obj.id];
         const newX = Math.max(0, initialPos.x + deltaX);
         const newY = Math.max(0, initialPos.y + deltaY);
-        console.log(`Moving object ${obj.id} from (${obj.position.x}, ${obj.position.y}) to (${newX}, ${newY})`);
+     
         return {
           ...obj,
           position: {
@@ -432,9 +482,20 @@ export const useSeatMap = () => {
   }, [state.currentMap]);
 
   const applyBatchLabels = useCallback((options: BatchLabelingOptions) => {
-    if (!state.currentMap) return;
+    if (!state.currentMap || state.selectedRows.length === 0) return;
 
-    const updatedRows = applyBatchLabeling(state.currentMap.rows, options);
+    // Only apply batch labeling to selected rows
+    const selectedRows = state.currentMap.rows.filter(row => state.selectedRows.includes(row.id));
+    const updatedSelectedRows = applyBatchLabeling(selectedRows, options);
+    
+    // Create a map of updated rows for quick lookup
+    const updatedRowsMap = new Map(updatedSelectedRows.map(row => [row.id, row]));
+    
+    // Update only the selected rows, keep others unchanged
+    const updatedRows = state.currentMap.rows.map(row => 
+      updatedRowsMap.has(row.id) ? updatedRowsMap.get(row.id)! : row
+    );
+    
     const updatedMap = {
       ...state.currentMap,
       rows: updatedRows,
@@ -445,7 +506,10 @@ export const useSeatMap = () => {
       ...prev,
       currentMap: updatedMap,
     }));
-  }, [state.currentMap]);
+
+    // Show toast notification
+    toast.success(`Etiquetas aplicadas a ${state.selectedRows.length} filas seleccionadas!`);
+  }, [state.currentMap, state.selectedRows]);
 
   const selectRow = useCallback((rowId: string, multiSelect: boolean = false) => {
     setState(prev => ({
@@ -685,7 +749,9 @@ export const useSeatMap = () => {
     addRow,
     addSeat,
     deleteRow,
+    deleteMultipleRows,
     deleteSeat,
+    deleteMultipleSeats,
     updateSeat,
     updateRow,
     moveSeat,

@@ -86,12 +86,10 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
   ) => {
     e.stopPropagation();
     
-    console.log("handleMouseDown called:", { type, id, selectedTool, selectedRows, selectedObjects });
     
     // Handle area selection - only for canvas clicks, not element clicks
     if (selectedTool === 'area-select' && type === 'row') {
       // This is a row click during area select - allow dragging
-      console.log("Row click during area select - allowing drag");
     } else if (selectedTool === 'area-select') {
       // This is not a row click - handle as area selection
       const rect = canvasRef.current?.getBoundingClientRect();
@@ -116,10 +114,6 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
         const y = e.clientY - rect.top;
         // For now, just show an alert - you can implement text input here
         const text = prompt('Enter text:');
-        if (text) {
-          // You can add text object here
-          console.log('Adding text:', text, 'at', x, y);
-        }
       }
       return;
     }
@@ -196,7 +190,6 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
       
       if (selectedTool === 'area-select' && selectedRows.length > 1 && selectedRows.includes(draggedItem.id)) {
         // Move multiple selected rows
-        console.log("Moving multiple rows:", selectedRows, "delta:", deltaX, deltaY);
         onMultipleRowMove(selectedRows, deltaX, deltaY);
       } else {
         // Move single row
@@ -210,8 +203,7 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
       const deltaY = e.clientY - draggedItem.startY;
       
       if (selectedTool === 'area-select' && selectedObjects.length > 1 && selectedObjects.includes(draggedItem.id)) {
-        // Move multiple selected objects
-        console.log("Moving multiple objects:", selectedObjects, "delta:", deltaX, deltaY);
+        // Move multiple selected objects     
         onMultipleObjectMove(selectedObjects, deltaX, deltaY);
       } else {
         // Move single object
@@ -281,12 +273,10 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
   }, [onSeatClick]);
 
   const handleAreaSelection = useCallback((selectedIds: string[]) => {
-    // console.log("Area selection changed:", selectedIds);
     onAreaSelection(selectedIds);
   }, [onAreaSelection]);
 
   const handleCanvasMouseDown = useCallback((e: React.MouseEvent) => {
-    console.log("Canvas mouse down - selectedTool:", selectedTool);
     
     // Don't interfere with react-selecto for area-select tool
     if (selectedTool === 'area-select') {
@@ -300,9 +290,6 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         const text = prompt('Enter text:');
-        if (text) {
-          console.log('Adding text:', text, 'at', x, y);
-        }
       }
       return;
     }
@@ -313,13 +300,7 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
     ...rows.map(row => `#row-${row.id}`),
     ...objects.map(obj => `#object-${obj.id}`),
   ];
-  
-  // Debug info
-  console.log("Selectable elements:", selectableElements);
-  console.log("Rows count:", rows.length);
-  console.log("Objects count:", objects.length);
-  console.log("Selected rows:", selectedRows);
-  console.log("Selected objects:", selectedObjects);
+
 
   return (
     <div
@@ -336,17 +317,13 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
     >
       {/* Canvas Boundary - Fixed size */}
       <div 
-        className="absolute border-2 border-dashed border-gray-400 rounded-lg pointer-events-none"
+        className='max-w-[1200px] max-h-[1200px] w-full h-full'
         style={{
           left: '20px',
           top: '20px',
-          width: '1200px',
-          height: '800px',
+          height: '1200px',
         }}
       >
-        <div className="absolute top-2 left-2 text-xs text-gray-500 bg-white px-2 py-1 rounded">
-          Canvas Area (1200x800)
-        </div>
       </div>
 
       {/* Selection Area */}
@@ -370,7 +347,7 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
       >
         {/* Venue Objects */}
         {objects?.map((object) => (
-          <div key={object.id} id={`object-${object.id}`}>
+          <div key={object.id} id={`object-${object.id}`} >
             <VenueObjectComponent
               object={object}
               isSelected={selectedObjects.includes(object.id)}
@@ -399,7 +376,7 @@ const SeatMapCanvas: React.FC<SeatMapCanvasProps> = ({
             onClick={(e) => handleRowClick(e, row.id)}
             onMouseDown={(e) => handleMouseDown(e, 'row', row.id)}
           >
-          <div className="font-semibold text-sm mb-3 text-gray-700 text-center">
+          <div className="font-semibold text-sm mb-0.5 text-gray-700 text-center">
             {row.label}
           </div>
           <div className="flex flex-wrap gap-1 justify-center">

@@ -1,5 +1,6 @@
 import { SeatMap, Row, Seat } from '@/types';
 import { generateId } from './seatmap';
+import { Music } from 'lucide-react';
 
 export interface Template {
   id: string;
@@ -39,7 +40,7 @@ export const templates: Template[] = [
           id: rowId,
           label: `Central Row ${i + 1}`,
           seats,
-          position: { x: 400, y: 200 + i * 40 },
+          position: { x: 600, y: 400 + i * 40 },
         });
       }
       
@@ -64,7 +65,7 @@ export const templates: Template[] = [
           id: rowId,
           label: `Left Row ${i + 1}`,
           seats,
-          position: { x: 140, y: 200 + i * 40 },
+          position: { x: 240, y: 400 + i * 40 },
         });
       }
       
@@ -89,7 +90,7 @@ export const templates: Template[] = [
           id: rowId,
           label: `Right Row ${i + 1}`,
           seats,
-          position: { x: 650, y: 200 + i * 40 },
+          position: { x: 900, y: 400 + i * 40 },
         });
       }
       
@@ -113,26 +114,15 @@ export const templates: Template[] = [
           id: rowId,
           label: `Side Row ${i + 1}`,
           seats,
-          position: { x: 20, y: 200 + i * 40 },
+          position: { x: 20, y: 400 + i * 40 },
         });
       }
       
-      // Add General Admission area
-      objects.push({
-        id: generateId(),
-        type: 'stage' as const,
-        label: 'General Admission',
-        position: { x: 200, y: 100 },
-        size: { width: 100, height: 60 },
-        isSelected: false,
-        color: '#ff6b6b',
-      });
       
       return {
         id: generateId(),
         name: 'Theater',
         rows,
-        objects,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

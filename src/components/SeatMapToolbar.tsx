@@ -90,7 +90,7 @@ const SeatMapToolbar: React.FC<SeatMapToolbarProps> = ({
                 onAddSeat(selectedRows[0]);
                 setShowAddSeatMenu(false);
               }}
-              className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
+              className="block w-full text-left px-3 py-2 text-sm"
             >
               Add to selected row
             </button>

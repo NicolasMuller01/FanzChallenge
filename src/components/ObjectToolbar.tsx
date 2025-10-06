@@ -79,18 +79,7 @@ const ObjectToolbar: React.FC<ObjectToolbarProps> = ({
       {/* Objects Info and Clean Button */}
       <div className="mt-4 pt-4 border-t border-gray-200">
         {/* Objects Info */}
-        <div className="mb-3 text-sm text-gray-600">
-          <div className="flex justify-between">
-            <span>Total Objects:</span>
-            <span className="font-medium">{totalObjects}</span>
-          </div>
-          {selectedObjects.length > 0 && (
-            <div className="flex justify-between text-blue-600">
-              <span>Selected:</span>
-              <span className="font-medium">{selectedObjects.length}</span>
-            </div>
-          )}
-        </div>
+
 
         {/* Clean Objects Button */}
         <button

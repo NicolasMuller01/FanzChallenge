@@ -21,7 +21,9 @@ export default function HomePage() {
     addRow,
     addSeat,
     deleteRow,
+    deleteMultipleRows,
     deleteSeat,
+    deleteMultipleSeats,
     updateSeat,
     updateRow,
     moveSeat,
@@ -77,7 +79,7 @@ export default function HomePage() {
     if (!state.currentMap) return;
     
     const rowNumber = state.currentMap.rows.length + 1;
-    addRow(`Row ${rowNumber}`, 50, 50 + (rowNumber - 1) * 120);
+    addRow(`Row ${rowNumber}`, 50, rowNumber < 20 ? 50 * rowNumber : 50 * rowNumber - 20);
   }, [state.currentMap, addRow]);
 
   const handleAddSeat = useCallback((rowId: string) => {
@@ -94,24 +96,17 @@ export default function HomePage() {
     if (!state.currentMap || state.selectedRows.length === 0) return;
     
     if (confirm(`Are you sure you want to delete ${state.selectedRows.length} row(s)?`)) {
-      state.selectedRows.forEach(rowId => deleteRow(rowId));
+      deleteMultipleRows(state.selectedRows);
     }
-  }, [state.currentMap, state.selectedRows, deleteRow]);
+  }, [state.currentMap, state.selectedRows, deleteMultipleRows]);
 
   const handleDeleteSeats = useCallback(() => {
     if (!state.currentMap || state.selectedSeats.length === 0) return;
     
     if (confirm(`Are you sure you want to delete ${state.selectedSeats.length} seat(s)?`)) {
-      // Find the row for each selected seat and delete it
-      state.currentMap.rows.forEach(row => {
-        row.seats.forEach(seat => {
-          if (state.selectedSeats.includes(seat.id)) {
-            deleteSeat(row.id, seat.id);
-          }
-        });
-      });
+      deleteMultipleSeats(state.selectedSeats);
     }
-  }, [state.currentMap, state.selectedSeats, deleteSeat]);
+  }, [state.currentMap, state.selectedSeats, deleteMultipleSeats]);
 
   const handleExport = useCallback(() => {
     if (!state.currentMap) return;
@@ -207,8 +202,6 @@ export default function HomePage() {
   }, [selectMultipleObjects]);
 
   const handleAreaSelection = useCallback((selectedIds: string[]) => {
-    console.log("Area selection received:", selectedIds);
-    
     // Separate row IDs and object IDs
     const rowIds = selectedIds
       .filter(id => id.startsWith('row-'))
@@ -218,8 +211,6 @@ export default function HomePage() {
       .filter(id => id.startsWith('object-'))
       .map(id => id.replace('object-', ''));
     
-    console.log("Row IDs to select:", rowIds);
-    console.log("Object IDs to select:", objectIds);
     
     // Select the found elements
     if (rowIds.length > 0) {
@@ -232,7 +223,7 @@ export default function HomePage() {
 
   const handleAddObject = useCallback((objectType: string) => {
     // Add object at center of canvas
-    addObject(objectType, 400, 300);
+    addObject(objectType, 10, 10);
   }, [addObject]);
 
   const handleCleanObjects = useCallback(() => {
@@ -405,7 +396,7 @@ export default function HomePage() {
         isOpen={showBatchLabelModal}
         onClose={() => setShowBatchLabelModal(false)}
         onApply={handleBatchLabel}
-        rowCount={state.currentMap?.rows.length || 0}
+        rowCount={state.selectedRows.length}
       />
 
       {showEditModal && (

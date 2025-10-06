@@ -22,18 +22,14 @@ const AreaSelector: React.FC<AreaSelectorProps> = ({
 
   const handleSelect = (e: any) => {
     if (isActive) {
-      console.log("AreaSelector onSelect:", e);
-      const selectedIds = e.selected.map((element: HTMLElement) => element.id).filter(Boolean);
-      console.log("Selected IDs from onSelect:", selectedIds);
+      const selectedIds = e.selected.map((element: HTMLElement) => element.id).filter(Boolean);  
       // Don't call onSelectionChange here, only on selectEnd
     }
   };
 
   const handleSelectEnd = (e: any) => {
     if (isActive) {
-      console.log("AreaSelector onSelectEnd:", e);
       const selectedIds = e.selected.map((element: HTMLElement) => element.id).filter(Boolean);
-      console.log("Selected IDs from onSelectEnd:", selectedIds);
       onSelectionChange(selectedIds);
     }
   };
